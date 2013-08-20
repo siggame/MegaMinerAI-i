@@ -1,0 +1,20 @@
+codegen:
+    type: git
+    location: https://github.com/siggame/codegen.git
+
+components:
+    server:
+        type: git
+        location: https://github.com/siggame/server.git
+        destination: server
+
+templates:
+    server-templates:
+        type: git
+        location: https://github.com/siggame/server-templates.git
+        destination: server/plugins
+
+    python-client:
+        type: git
+        location: https://github.com/siggame/python-client.git
+        destination: clients/python

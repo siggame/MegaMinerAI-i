@@ -1,0 +1,70 @@
+game_name: botnet
+
+#increment this when protocol changes
+game_version: 1
+
+# Game variables not tied to a particular object
+# This is the set of globals that should always exist
+globals:
+    turn_number:
+        type: int
+        doc: How many turns it has been since the beginning of the game
+    game_name:
+        type: string
+        doc: The name of this match on the server
+    player_id:
+        type: int
+        doc: Player Number; either 0 or 1 (0 is player 1 1 is player 2)
+    start_time:
+        type: float
+        doc: The time a player has when the game begins in seconds
+    time_increment:
+        type: float
+        doc: How much extra time a player gets when their turn begins
+
+# These are the 'classes' of objects in the game
+models:
+    # The Player model should always be included
+    Player:
+        # And should always have these data
+        # (Additional data is fine, but don't delete these)
+        data:
+            name:
+                type: str
+                doc: Player's name
+            time:
+                type: float
+                doc: The amount of time this player has before timing out
+        doc: Stores information about a player in the game
+        functions:
+            # The talk function isn't necessary, but this is an example file!
+            # And a little smack talk is fun
+            talk:
+                arguments:
+                    message:
+                        type: str
+                        doc: The message that the player should say
+                doc: Allows a player to display a message to the screen
+
+    # This is a common model that is the parent for models that map to a grid
+    Mappable:
+        data:
+            x:
+                type: int
+                doc: The x coordinate
+            y:
+                type: int
+                doc: The y coordinate
+        doc: The base object for all mappable things
+        #Virtual models are not meant to be instantiated, just a parent to others
+        type: virtual
+
+    # Subclassing example
+    Tile:
+        parent: Mappable
+        # We don't need to specify x and y because they're inherited
+        # functions are inherited too
+        data:
+            owner:
+                type: int
+                doc: Who owns this tile
