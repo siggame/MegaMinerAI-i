@@ -1,6 +1,4 @@
-Egg
+MegaMinerAI i
 ===
 
-Egg is a shell MegaMiner repository.
-
-It contains utility scripts to initialize a MegaMiner repository and perform common operations.
+An example game using the new framework.
