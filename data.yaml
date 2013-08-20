@@ -1,33 +1,33 @@
-game_name: botnet
+game_name: mechaminer
 
-#increment this when protocol changes
-game_version: 1
-
-# Game variables not tied to a particular object
-# This is the set of globals that should always exist
+# Variables the server needs to send the client each game
 globals:
     turn_number:
         type: int
         doc: How many turns it has been since the beginning of the game
+    player:
+        type: Player
+        doc: The player whose turn it currently is
     game_name:
-        type: string
-        doc: The name of this match on the server
-    player_id:
+        type: str
+        doc: What number game this is for the server
+    width:
         type: int
-        doc: Player Number; either 0 or 1 (0 is player 1 1 is player 2)
-    start_time:
-        type: float
-        doc: The time a player has when the game begins in seconds
-    time_increment:
-        type: float
-        doc: How much extra time a player gets when their turn begins
+        doc: The width of the map (max X value)
+    height:
+        type: int
+        doc: The height of the map (max Y value)
+    fighter:
+        type: RobotType
+    healer:
+        type: RobotType
+    sniper:
+        type: RobotType
+    bomber:
+        type: RobotType
 
-# These are the 'classes' of objects in the game
 models:
-    # The Player model should always be included
     Player:
-        # And should always have these data
-        # (Additional data is fine, but don't delete these)
         data:
             name:
                 type: str
@@ -35,10 +35,14 @@ models:
             time:
                 type: float
                 doc: The amount of time this player has before timing out
+            expensivium:
+                type: int
+                doc: Player's points, one with more at end of game wins
+            money:
+                type: int
+                doc: Player' money, used to build new units
         doc: Stores information about a player in the game
         functions:
-            # The talk function isn't necessary, but this is an example file!
-            # And a little smack talk is fun
             talk:
                 arguments:
                     message:
@@ -46,7 +50,28 @@ models:
                         doc: The message that the player should say
                 doc: Allows a player to display a message to the screen
 
-    # This is a common model that is the parent for models that map to a grid
+    RobotType:
+        data:
+            max_health:
+                type: int
+                doc: The robot's starting and maximum health
+            range:
+                type: int
+                doc: The robot's attack range
+            splash:
+                type: int
+                doc: How many tiles away from the robot's target its attacks deal damage
+            damage:
+                type: int
+                doc: How much damage the robot's attacks do
+            movement:
+                type: int
+                doc: How far the robot can move each turn
+            attacks:
+                type: int
+                doc: How many times the robot can attack each turn.
+        doc: This class describes the characteristics for each type of robot
+
     Mappable:
         data:
             x:
@@ -56,15 +81,75 @@ models:
                 type: int
                 doc: The y coordinate
         doc: The base object for all mappable things
-        #Virtual models are not meant to be instantiated, just a parent to others
         type: virtual
 
-    # Subclassing example
-    Tile:
+    Robot:
         parent: Mappable
-        # We don't need to specify x and y because they're inherited
-        # functions are inherited too
         data:
             owner:
+                type: Player
+                doc: The owner of this Robot
+            type:
+                type: RobotType
+                doc: The model of the robot
+            health:
                 type: int
-                doc: Who owns this tile
+                doc: The Robot's level
+            moves_left:
+                type: int
+                doc: The number of times this robot can still move this turn
+            attack_left:
+                type: int
+                doc: The number of times this robot can still attack this turn
+            max_health:
+                through: type
+            range:
+                through: type
+            splash:
+                through: type
+            damage:
+                through: type
+            movement:
+                through: type
+            attacks:
+                through: type
+        doc: Your primary Unit
+        functions:
+            move:
+                arguments:
+                    destination:
+                        type: Mappable
+                        doc: The location to move to
+            attack:
+                arguments:
+                    target:
+                        type: Mappable
+                        doc: The target to attack
+
+    Factory:
+        parent: Mappable
+        data:
+            owner:
+                type: Player
+                doc: The owner of this base
+        doc: A base that can produce robots
+        functions:
+            spawn:
+                arguments:
+                    type:
+                        type: RobotType
+                doc: Creates a Robot on the base of the given type.
+
+    Mine:
+        parent: Mappable
+        data:
+            owner:
+                type: Player
+                doc: The owner of this mine
+        doc: A mine that produces expensivium every turn. Obtained by moving a robot onto its tile.
+
+    Tile:
+        parent: Mappable
+        data:
+            wall:
+                type: bool
