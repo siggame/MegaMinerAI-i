@@ -18,6 +18,8 @@ class Game(game_objects.Game):
         #(But any game-specific values will be uninitialized)
         config = self.load_config('defaults')
         self.game_length = config['globals']['game_length']
+        self.width = config['globals']['width']
+        self.height = config['globals']['height']
 
     def before_turn(self):
         #TODO: Initialize the turn
