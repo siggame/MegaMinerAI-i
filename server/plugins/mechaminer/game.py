@@ -26,8 +26,38 @@ class Game(game_objects.Game):
 
         #Make a grid of tiles
         self.grid = game_utils.Grid(self, objects.Tile)
-        #And amke it width x height.
+        #And make it width x height.
         self.grid.generate(self.width, self.height)
+
+        #And generate a map:
+        #The config/tiles directory has all the different tiles
+        #Add/remove/edit those to get what you want from it
+        generator = game_utils.TileMapGenerator(self, self.width, self.height)
+        #Build a basic map
+        generator.generate()
+
+        #Place 1 base on the map for each player
+        generator.sprinkle(1, 'b')
+
+        #Place 5 mines on the map for each player
+        generator.sprinkle(5, 'm')
+
+        #And ensure all empty space, bases, and mines are connected
+        generator.connect_map(' bm')
+
+        #Then use the data on the generator to populate our map:
+        for i in generator:
+            tile = self.grid[i.x, i.y]
+            if i.value == '#':
+                tile.wall = True
+            elif i.value == 'b':
+                base = objects.Factory(self, x=i.x, y=i.y)
+                if i.x < self.width / 2:
+                    base.owner = self.players[0]
+                else:
+                    base.owner = self.players[1]
+            elif i.value == 'm':
+                objects.Mine(self, x=i.x, y=i.y)
 
     def before_turn(self):
         #TODO: Initialize the turn
