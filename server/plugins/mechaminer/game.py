@@ -59,6 +59,9 @@ class Game(game_objects.Game):
             elif i.value == 'm':
                 objects.Mine(self, x=i.x, y=i.y)
 
+        for i in self.players:
+            i.money = 100
+
     def before_turn(self):
         #TODO: Initialize the turn
         #turn_number and current_player will be valued for the coming turn
