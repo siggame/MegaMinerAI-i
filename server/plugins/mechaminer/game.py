@@ -1,6 +1,9 @@
 import game_objects
 import objects
 
+#Assorted utilitily to automate common game stuff
+import game_utils
+
 class Game(game_objects.Game):
     _name = 'mechaminer'
     _game_version = 1
@@ -20,6 +23,11 @@ class Game(game_objects.Game):
         self.game_length = config['globals']['game_length']
         self.width = config['globals']['width']
         self.height = config['globals']['height']
+
+        #Make a grid of tiles
+        self.grid = game_utils.Grid(self, objects.Tile)
+        #And amke it width x height.
+        self.grid.generate(self.width, self.height)
 
     def before_turn(self):
         #TODO: Initialize the turn
