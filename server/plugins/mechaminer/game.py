@@ -37,10 +37,10 @@ class Game(game_objects.Game):
         generator.generate()
 
         #Place 1 base on the map for each player
-        generator.sprinkle(1, 'b')
+        generator.sprinkle(config['globals']['factories'], 'b')
 
         #Place 5 mines on the map for each player
-        generator.sprinkle(5, 'm')
+        generator.sprinkle(config['globals']['mines'], 'm')
 
         #And ensure all empty space, bases, and mines are connected
         generator.connect_map(' bm')
@@ -60,7 +60,7 @@ class Game(game_objects.Game):
                 objects.Mine(self, x=i.x, y=i.y)
 
         for i in self.players:
-            i.money = 100
+            i.money = config['globals']['starting_money']
 
     def before_turn(self):
         #TODO: Initialize the turn
