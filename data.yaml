@@ -52,6 +52,9 @@ models:
 
     RobotType:
         data:
+            name:
+                type: str
+                doc: The name of the robot type
             max_health:
                 type: int
                 doc: The robot's starting and maximum health
