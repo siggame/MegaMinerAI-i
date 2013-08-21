@@ -114,9 +114,12 @@ class Mine(Game.Object):
         pass
 
     def after_turn(self):
-        #TODO: Set post-turn values
-        #Common example would be zeroing unit moves after the turn
-        pass
+        #Our owner gets points after their turn
+        if self.game.player == self.owner:
+            self.game.player.expensivium += 1
+        else:
+            #Or gets money from not having to pay wages
+            self.game.player.money += 1
 
 
 class Tile(Game.Object):
