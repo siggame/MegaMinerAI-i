@@ -23,6 +23,12 @@ class Game(game_objects.Game):
         self.game_length = config['globals']['game_length']
         self.width = config['globals']['width']
         self.height = config['globals']['height']
+        
+        self.make_grid()
+
+    def make_grid(self):
+        #Load config stuff
+        config = self.load_config('defaults')
 
         #Make a grid of tiles
         self.grid = game_utils.Grid(self, objects.Tile)
