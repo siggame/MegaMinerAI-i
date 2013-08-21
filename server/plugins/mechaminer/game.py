@@ -24,7 +24,15 @@ class Game(game_objects.Game):
         self.width = config['globals']['width']
         self.height = config['globals']['height']
         
+        self.make_types()
         self.make_grid()
+
+    def make_types(self):
+        config = self.load_config('unit_types')
+        for name, stats in config.items():
+            type = objects.RobotType(self, **stats)
+            type.name = name
+            setattr(self, name, type)
 
     def make_grid(self):
         #Load config stuff
