@@ -100,7 +100,18 @@ class Factory(Game.Object):
     @command
     @takes(type = 'RobotType')
     def spawn(self, type = None):
-        pass
+        if self.owner.money < type.cost:
+            return 'Building {} costs {}, but you only have {}'.format(
+                    type.name, type.cost, self.owner.money)
+
+        new = Robot(self.game)
+        new.x = self.x
+        new.y = self.y
+        new.type = type
+        new.owner = self.owner
+        new.health = new.max_health
+        new.moves_left = new.movement
+        new.attacks_left = new.attacks
 
 
 class Mine(Game.Object):
